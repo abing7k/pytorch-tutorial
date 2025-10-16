@@ -11,7 +11,15 @@ from torch import nn
 from torch.utils.data import DataLoader
 
 # 定义训练的设备
-device = torch.device("cuda")
+if torch.cuda.is_available():
+    device = torch.device("cuda")
+    print("✅ Using GPU (CUDA):", torch.cuda.get_device_name(0))
+elif torch.backends.mps.is_available():
+    device = torch.device("mps")
+    print("✅ Using Apple MPS backend (Metal)")
+else:
+    device = torch.device("cpu")
+    print("⚙️ Using CPU")
 
 train_data = torchvision.datasets.CIFAR10(root="../data", train=True, transform=torchvision.transforms.ToTensor(),
                                           download=True)
